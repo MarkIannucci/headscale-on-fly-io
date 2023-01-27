@@ -4,6 +4,6 @@ COPY entrypoint /etc/headscale/entrypoint
 
 COPY config.yaml /etc/headscale/config.yaml
 
-EXPOSE 8080/tcp 9090/tcp
+EXPOSE 8080/tcp 9090/tcp 50443/tcp
 
 CMD ["headscale"]
