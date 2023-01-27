@@ -15,6 +15,7 @@ processes = []
 [experimental]
   auto_rollback = true
   entrypoint = ["/entrypoint"]
+  cmd = ["headscale","serve"]
 
 [[services]]
   http_checks = []
