@@ -1,7 +1,6 @@
 FROM ghcr.io/juanfont/headscale:0.18.0
 
 COPY entrypoint /etc/headscale/entrypoint
-RUN chmod +x /etc/headscale/entrypoint
 
 COPY config.yaml /etc/headscale/config.yaml
 
