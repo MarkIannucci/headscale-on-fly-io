@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ ! -f /persistent/db.sqlite ]; then # need to create the sqlite file
+    touch /persistent/db.sqlite
+fi

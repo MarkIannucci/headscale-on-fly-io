@@ -8,6 +8,10 @@ processes = []
 [env]
   TZ = "UTC"
 
+[mounts]
+  source = "persistent"
+  destination = "/persistent"
+
 [experimental]
   auto_rollback = true
 
@@ -36,3 +40,7 @@ processes = []
     interval = "15s"
     restart_limit = 0
     timeout = "2s"
+
+[metrics]
+  port = 9090 # default for most prometheus clients
+  path = "/metrics" # default for most prometheus clients
