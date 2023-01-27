@@ -14,7 +14,6 @@ processes = []
 
 [experimental]
   auto_rollback = true
-  #entrypoint = ["/etc/headscale/entrypoint"]
   cmd = ["headscale","serve"]
 
 [[services]]
