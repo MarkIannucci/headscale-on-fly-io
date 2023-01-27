@@ -10,19 +10,16 @@
 #
 # https://myheadscale.example.com:443
 #
-server_url: http://127.0.0.1:8080
+server_url: https://headscale-on-fly.fly.dev:443
 
 # Address to listen to / bind to on the server
-#
-# For production:
-# listen_addr: 0.0.0.0:8080
-listen_addr: 127.0.0.1:8080
+listen_addr: 0.0.0.0:8080
 
 # Address to listen to /metrics, you may want
 # to keep this endpoint private to your internal
-# network
+# network -- fly recommends otherwise -- https://fly.io/docs/reference/metrics/#instrumentation
 #
-metrics_listen_addr: 127.0.0.1:9090
+metrics_listen_addr: 0.0.0.0:9090
 
 # Address to listen for gRPC.
 # gRPC is used for controlling a headscale server
@@ -46,7 +43,7 @@ grpc_allow_insecure: false
 #
 # For production:
 # /var/lib/headscale/private.key
-private_key_path: ./private.key
+private_key_path: /persistent/private.key
 
 # The Noise section includes specific configuration for the
 # TS2021 Noise protocol
@@ -58,7 +55,7 @@ noise:
   #
   # For production:
   # private_key_path: /var/lib/headscale/noise_private.key
-  private_key_path: ./noise_private.key
+  private_key_path: /persistent/noise_private.key
 
 # List of IP prefixes to allocate tailaddresses from.
 # Each prefix consists of either an IPv4 or IPv6 address,
@@ -138,7 +135,7 @@ db_type: sqlite3
 
 # For production:
 # db_path: /var/lib/headscale/db.sqlite
-db_path: ./db.sqlite
+db_path: /persistent/db.sqlite
 
 # # Postgres config
 # If using a Unix socket to connect to Postgres, set the socket path in the 'host' field and leave 'port' blank.
