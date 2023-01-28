@@ -1,0 +1,41 @@
+name: Fly build and deploy
+
+on:
+  pull_request:
+  push:
+    branches:
+    - main
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  FLY_APP_NAME: ${{ vars.FLY_APP_NAME }}
+  FLY_REGION: ${{ vars.FLY_REGION }}
+
+jobs:
+  deploy:
+    name: Deploy app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: markiannucci/flyctl-actions/setup-flyctl@main
+
+      - id: update-app-name-for-prs
+        if: github.event_name == 'pull_request'
+        run: 
+          echo "FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}" >> $GITHUB_ENV
+
+      - id: variable-substition-for-toml
+        run : |
+          envsubst < fly.template.toml | tee fly.toml
+          cat fly.toml 
+      
+      - id: create-app-and-volume-if-necessary
+        run: |
+          if [[ $(flyctl apps list | grep -w "${FLY_APP_NAME}" | head -c1 | wc -c ) -eq 0 ]]
+          then
+            flyctl apps create ${FLY_APP_NAME}
+            flyctl volumes create persistent --size 1 --region ${FLY_REGION}
+          fi
+
+      - id: deploy
+        run: flyctl deploy --remote-only --region ${FLY_REGION} 
