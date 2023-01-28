@@ -22,7 +22,7 @@ jobs:
       - id: update-app-name-for-prs
         if: github.event_name == 'pull_request'
         run: 
-          FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}
+          echo "FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}" >> $GITHUB_ENV
 
       - id: variable-substition-for-toml
         run : |
