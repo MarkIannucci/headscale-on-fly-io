@@ -26,7 +26,7 @@ jobs:
 
       - id: variable-substition-for-toml
         run : |
-          envsubst < fly.template.toml | fly.toml
+          envsubst < fly.template.toml | tee fly.toml
           cat fly.toml 
       
       - id: create-app-and-volume-if-necessary
