@@ -20,7 +20,7 @@ jobs:
       - uses: markiannucci/flyctl-actions/setup-flyctl@main
 
       - id: update-app-name-for-prs
-        if: github.event == 'pull_request'
+        if: github.event_name == 'pull_request'
         run: 
           FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}
 
