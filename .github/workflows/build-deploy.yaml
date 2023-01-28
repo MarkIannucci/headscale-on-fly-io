@@ -32,7 +32,11 @@ jobs:
       - id: create-app-and-volume-if-necessary
         # if fly apps list | grep ${FLY_APP_NAME} is null do stuff
         run: |
-          
+          if [[ ${fly apps list | grep -w "${FLY_APP_NAME}" | head -c1 | wc -c ) -eq 0 ]]
+          then
+            fly apps create ${FLY_APP_NAME}
+            fly volumes create persistent --size 1 --region ${FLY_REGION}
+          fi
 
       - id: deploy
-        run: flyctl deploy --remote-only
+        run: flyctl deploy --remote-only --region ${FLY_REGION} 
