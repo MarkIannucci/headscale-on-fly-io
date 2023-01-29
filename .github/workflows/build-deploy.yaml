@@ -27,11 +27,7 @@ jobs:
       - id: variable-substition
         run : |
           envsubst < fly.template.toml | tee fly.toml
-          echo "fly.toml:"
-          cat fly.toml
           envsubst < config.template.toml | tee config.yaml
-          echo "config.yaml"
-          cat config.yaml
       
       - id: create-app-and-volume-if-necessary
         run: |
