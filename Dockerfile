@@ -1,4 +1,4 @@
-FROM ghcr.io/juanfont/headscale:0.18.0
+FROM ghcr.io/juanfont/headscale:0.19.0
 
 COPY config.yaml /etc/headscale/config.yaml
 
