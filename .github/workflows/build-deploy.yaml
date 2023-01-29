@@ -11,6 +11,10 @@ env:
   FLY_APP_NAME: ${{ vars.FLY_APP_NAME }}
   FLY_REGION: ${{ vars.FLY_REGION }}
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   deploy:
     name: Deploy app
