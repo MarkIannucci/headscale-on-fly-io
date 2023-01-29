@@ -10,7 +10,7 @@
 #
 # https://myheadscale.example.com:443
 #
-server_url: https://headscale-on-fly.fly.dev:443
+server_url: https://${FLY_APP_NAME}.fly.dev:443
 
 # Address to listen to / bind to on the server
 listen_addr: 0.0.0.0:8080
