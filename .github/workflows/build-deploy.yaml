@@ -11,6 +11,10 @@ env:
   FLY_APP_NAME: ${{ vars.FLY_APP_NAME }}
   FLY_REGION: ${{ vars.FLY_REGION }}
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   deploy:
     name: Deploy app
@@ -24,10 +28,10 @@ jobs:
         run: 
           echo "FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}" >> $GITHUB_ENV
 
-      - id: variable-substition-for-toml
+      - id: variable-substition
         run : |
           envsubst < fly.template.toml | tee fly.toml
-          cat fly.toml 
+          envsubst < config.template.yaml | tee config.yaml
       
       - id: create-app-and-volume-if-necessary
         run: |
