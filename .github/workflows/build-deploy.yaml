@@ -95,6 +95,14 @@ jobs:
       - id: tf-plan-production
         if: github.event_name == 'pull_request'
         run: |
+          # cleanup the FLY_APP_NAME we polluted earlier
+          HYPHENS=$(echo "$FLY_APP_NAME" | tr -cd '-' | wc -c)
+          FLY_APP_NAME=$(echo "FLY_APP_NAME" | cut -d'-' -f1-$HYPHENS) 
+
+          # rerun the envsubst
+          envsubst < ./terraform/terraform.template.tfvars | tee ./terraform/terraform.tfvars
+
+          # hack around initial workspace loss
           if [ -z "$(terraform workspace list | grep default )" ]; then
             terraform workspace new default
           else
