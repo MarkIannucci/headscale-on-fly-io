@@ -71,15 +71,17 @@ jobs:
           else
             terraform workspace select ${{ github.event.number }}
           fi
-      - id: tf-plan
-        if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
-        working-directory: ./terraform
 
       - id: tf-apply 
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
         working-directory: ./terraform
 
       - id: deploy
         run: flyctl deploy --remote-only --region ${FLY_REGION} 
+
+      - id: tf-plan-production
+        if: github.event_name == 'pull_request'
+        run: |
+          terraform workspace select default
+          terraform plan -no-color -input=false
+        working-directory: ./terraform
