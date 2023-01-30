@@ -32,14 +32,32 @@ jobs:
         run : |
           envsubst < fly.template.toml | tee fly.toml
           envsubst < config.template.yaml | tee config.yaml
+          envsubst < /terraform/terraform.template.tfvars | tee terraform.tfvars
       
-      - id: create-app-and-volume-if-necessary
-        run: |
-          if [[ $(flyctl apps list | grep -w "${FLY_APP_NAME}" | head -c1 | wc -c ) -eq 0 ]]
-          then
-            flyctl apps create ${FLY_APP_NAME}
-            flyctl volumes create persistent --size 1 --region ${FLY_REGION}
-          fi
+      # terraform boilerplate stuff
+      - id: tf-setup
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - id: tf-fmt
+        run: terraform fmt -check
+        working-directory: ./terraform
+      - id: tf-init
+        run: terraform init
+        working-directory: ./terraform
+      - id: tf-validate
+        run: terraform validate -no-color
+        working-directory: ./terraform
+
+      - id: tf-plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color -input=false
+        working-directory: ./terraform
+
+      - id: tf-apply 
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
+        working-directory: ./terraform
 
       - id: deploy
         run: flyctl deploy --remote-only --region ${FLY_REGION} 
