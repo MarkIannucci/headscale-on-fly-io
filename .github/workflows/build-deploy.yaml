@@ -9,7 +9,7 @@ on:
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   FLY_APP_NAME: ${{ vars.FLY_APP_NAME }}
-  FLY_REGION: ${{ vars.FLY_REGION }}
+  FLY_PRIMARY_REGION: ${{ vars.FLY_PRIMARY_REGION }}
   FLY_REGIONS: ${{ vars.FLY_REGIONS }}
   ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY}}
 
@@ -85,7 +85,7 @@ jobs:
 
       # deploy to first region
       - id: deploy
-        run: flyctl deploy --region $(echo "$FLY_REGIONS" | cut -d',' -f1)
+        run: flyctl deploy --region $FLY_PRIMARY_REGION
 
       # scale to other regions
       - id: scale-out
