@@ -66,6 +66,7 @@ jobs:
       - id: tf-workspace
         if: github.event_name == 'pull_request'
         run: |
+          terraform workspace list
           if [ -z "$(terraform workspace list | grep $FLY_APP_NAME )" ]; then
             terraform workspace new $FLY_APP_NAME
           else
