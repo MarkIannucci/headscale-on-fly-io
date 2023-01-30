@@ -84,7 +84,7 @@ jobs:
 
       - id: tf-apply
         run: |
-          TF_VAR_fly_regions="["$FLY_REGIONS"]""
+          TF_VAR_fly_regions="[$FLY_REGIONS]"
           export TF_VAR_fly_regions
           echo "TF_VAR_fly_regions=$TF_VAR_fly_regions" >> $GITHUB_ENV
           terraform apply -auto-approve -input=false
