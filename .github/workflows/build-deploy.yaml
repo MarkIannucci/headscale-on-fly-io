@@ -76,12 +76,21 @@ jobs:
         run: terraform apply -auto-approve -input=false
         working-directory: ./terraform
 
-      - id: deploy
+      # scale fly app to zero if running
+      - id: scale-zero
         run: |
-          for REGION in $(echo $FLY_REGIONS | sed "s/,/ /g")
-          do
-            flyctl deploy --remote-only --region $REGION 
-          done
+          if [ $(flyctl status --json | jq ".Status") -eq '"running"' ]; then 
+            flyctl scale count 0
+            sleep 60
+          fi
+
+      # deploy to first region
+      - id: deploy
+        run: fly deploy --region $(echo "$FLY_REGIONS" | cut -d',' -f1)
+
+      # scale to other regions
+      - id: scale-out
+        run: fly scale count 3 --max-per-region 1
 
       - id: tf-plan-production
         if: github.event_name == 'pull_request'
