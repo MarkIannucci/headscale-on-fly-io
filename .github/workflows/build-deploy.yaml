@@ -11,6 +11,7 @@ env:
   FLY_APP_NAME: ${{ vars.FLY_APP_NAME }}
   FLY_REGION: ${{ vars.FLY_REGION }}
   FLY_REGIONS: ${{ vars.FLY_REGIONS }}
+  ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY}}
 
 defaults:
   run:
@@ -65,10 +66,10 @@ jobs:
       - id: tf-workspace
         if: github.event_name == 'pull_request'
         run: |
-          if [ -z "$(terraform workspace list | grep '-${{ github.event.number }}' )" ]; then
-            terraform workspace new '-${{ github.event.number }}'
+          if [ -z "$(terraform workspace list | grep ${{ github.event.number }} )" ]; then
+            terraform workspace new ${{ github.event.number }}
           else
-            terraform workspace select '-${{ github.event.number }}'
+            terraform workspace select ${{ github.event.number }}
           fi
 
       - id: tf-apply 
