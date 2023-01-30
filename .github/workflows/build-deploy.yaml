@@ -66,10 +66,10 @@ jobs:
       - id: tf-workspace
         if: github.event_name == 'pull_request'
         run: |
-          if [ -z "$(terraform workspace list | grep $GITHUB_EVENT_NUMBER )" ]; then
-            terraform workspace new $GITHUB_EVENT_NUMBER
+          if [ -z "$(terraform workspace list | grep ${{ github.event.number }} )" ]; then
+            terraform workspace new ${{ github.event.number }}
           else
-            terraform workspace select $GITHUB_EVENT_NUMBER
+            terraform workspace select ${{ github.event.number }}
           fi
       - id: tf-plan
         if: github.event_name == 'pull_request'
