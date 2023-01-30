@@ -44,13 +44,33 @@ jobs:
       - id: tf-fmt
         run: terraform fmt -check
         working-directory: ./terraform
+        continue-on-error: true
+      - id: fix-tf-fmt
+        if: steps.tf-fmt.outcome == 'failure'
+        run: |
+          git fetch origin ${{ github.head_ref }}
+          git checkout ${{ github.head_ref }}
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          terraform fmt
+          git add .
+          git commit -m "fix terraform format "
+          git push
+        working-directory: ./terraform
       - id: tf-init
         run: terraform init
         working-directory: ./terraform
       - id: tf-validate
         run: terraform validate -no-color
         working-directory: ./terraform
-
+      - id: tf-workspace
+        if: github.event_name == 'pull_request'
+        run: |
+          if [ -z "$(terraform workspace list | grep $GITHUB_EVENT_NUMBER )" ]; then
+            terraform workspace new $GITHUB_EVENT_NUMBER
+          else
+            terraform workspace select $GITHUB_EVENT_NUMBER
+          fi
       - id: tf-plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
