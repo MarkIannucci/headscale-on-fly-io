@@ -79,13 +79,18 @@ jobs:
       - id: scale-zero
         run: |
           if [ $(flyctl status --json | jq ".Status") == '"running"' ]; then 
-            flyctl scale count 0
+            flyctl suspend $FLY_APP_NAME
+            echo "EXISTING=yes" >> $GITHUB_ENV
             sleep 60
           fi
 
       # deploy to first region
       - id: deploy
-        run: flyctl deploy --region $FLY_PRIMARY_REGION
+        run: |
+          flyctl deploy --region $FLY_PRIMARY_REGION
+          if [ $EXISTING == yes ]; then
+            flyctl resume $FLY_APP_NAME
+          fi
 
       # scale to other regions
       - id: scale-out
