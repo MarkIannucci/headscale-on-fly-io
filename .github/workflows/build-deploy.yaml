@@ -100,7 +100,7 @@ jobs:
           FLY_APP_NAME=$(echo "FLY_APP_NAME" | cut -d'-' -f1-$HYPHENS) 
 
           # rerun the envsubst
-          envsubst < ./terraform/terraform.template.tfvars | tee ./terraform/terraform.tfvars
+          envsubst < terraform.template.tfvars | tee terraform.tfvars
 
           # hack around initial workspace loss
           if [ -z "$(terraform workspace list | grep default )" ]; then
