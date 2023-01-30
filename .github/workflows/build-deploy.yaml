@@ -77,7 +77,11 @@ jobs:
         working-directory: ./terraform
 
       - id: deploy
-        run: flyctl deploy --remote-only --region ${FLY_REGION} 
+        run: |
+          for REGION in $(echo $FLY_REGIONS | sed "s/,/ /g")
+          do
+            flyctl deploy --remote-only --region $REGION 
+          done
 
       - id: tf-plan-production
         if: github.event_name == 'pull_request'
