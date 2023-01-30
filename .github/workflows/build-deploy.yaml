@@ -39,8 +39,6 @@ jobs:
       # terraform boilerplate stuff
       - id: tf-setup
         uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_wrapper: false
       - id: tf-fmt
         run: terraform fmt -check
         working-directory: ./terraform
@@ -63,8 +61,7 @@ jobs:
       - id: tf-validate
         run: terraform validate -no-color
         working-directory: ./terraform
-      - id: tf-workspace
-        if: github.event_name == 'pull_request'
+      - id: tf-workspace-apply
         run: |
           terraform workspace list
           if [ -z "$(terraform workspace list | grep $FLY_APP_NAME )" ]; then
@@ -72,6 +69,7 @@ jobs:
           else
             terraform workspace select $FLY_APP_NAME
           fi
+        working-directory: ./terraform
 
       - id: tf-apply 
         run: terraform apply -auto-approve -input=false
