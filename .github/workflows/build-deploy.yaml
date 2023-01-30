@@ -9,8 +9,9 @@ on:
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   FLY_APP_NAME: ${{ vars.FLY_APP_NAME }}
-  FLY_REGION: ${{ vars.FLY_REGION }}
+  FLY_PRIMARY_REGION: ${{ vars.FLY_PRIMARY_REGION }}
   FLY_REGIONS: ${{ vars.FLY_REGIONS }}
+  ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY}}
 
 defaults:
   run:
@@ -38,8 +39,6 @@ jobs:
       # terraform boilerplate stuff
       - id: tf-setup
         uses: hashicorp/setup-terraform@v2
-        with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
       - id: tf-fmt
         run: terraform fmt -check
         working-directory: ./terraform
@@ -62,14 +61,15 @@ jobs:
       - id: tf-validate
         run: terraform validate -no-color
         working-directory: ./terraform
-      - id: tf-workspace
-        if: github.event_name == 'pull_request'
+      - id: tf-workspace-apply
         run: |
-          if [ -z "$(terraform workspace list | grep ${{ github.event.number }} )" ]; then
-            terraform workspace new ${{ github.event.number }}
+          terraform workspace list
+          if [ -z "$(terraform workspace list | grep $FLY_APP_NAME$ )" ]; then
+            terraform workspace new $FLY_APP_NAME
           else
-            terraform workspace select ${{ github.event.number }}
+            terraform workspace select $FLY_APP_NAME
           fi
+        working-directory: ./terraform
 
       - id: tf-apply 
         run: terraform apply -auto-approve -input=false
@@ -85,7 +85,7 @@ jobs:
 
       # deploy to first region
       - id: deploy
-        run: flyctl deploy --region $(echo "$FLY_REGIONS" | cut -d',' -f1)
+        run: flyctl deploy --region $FLY_PRIMARY_REGION
 
       # scale to other regions
       - id: scale-out
@@ -96,16 +96,16 @@ jobs:
         run: |
           # cleanup the FLY_APP_NAME we polluted earlier
           HYPHENS=$(echo "$FLY_APP_NAME" | tr -cd '-' | wc -c)
-          FLY_APP_NAME=$(echo "FLY_APP_NAME" | cut -d'-' -f1-$HYPHENS) 
+          FLY_APP_NAME=$(echo "$FLY_APP_NAME" | cut -d'-' -f1-$HYPHENS) 
 
           # rerun the envsubst
           envsubst < terraform.tfvars.template | tee terraform.tfvars
 
           # hack around initial workspace loss
-          if [ -z "$(terraform workspace list | grep default )" ]; then
-            terraform workspace new default
+          if [ -z "$(terraform workspace list | grep $FLY_APP_NAME$ )" ]; then
+            terraform workspace new $FLY_APP_NAME
           else
-            terraform workspace select default
+            terraform workspace select $FLY_APP_NAME
           fi
           terraform plan -no-color -input=false
         working-directory: ./terraform

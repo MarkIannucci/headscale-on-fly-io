@@ -1,3 +1,7 @@
+# ignore template produced files
+config.yaml
+fly.toml
+
 # Local .terraform directories
 **/.terraform/*
 
