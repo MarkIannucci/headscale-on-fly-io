@@ -78,6 +78,7 @@ jobs:
             TF_VAR_fly_regions="[\"$FLY_PRIMARY_REGION\"]"
             export TF_VAR_fly_regions
             terraform apply -auto-approve -input=false
+            cd ..
             flyctl deploy
             echo "FIRST_APPLY=yes" >> $GITHUB_ENV
           fi
