@@ -78,7 +78,7 @@ jobs:
       # scale fly app to zero if running
       - id: scale-zero
         run: |
-          if [ $(flyctl status --json | jq ".Status") -eq '"running"' ]; then 
+          if [ $(flyctl status --json | jq ".Status") == '"running"' ]; then 
             flyctl scale count 0
             sleep 60
           fi
