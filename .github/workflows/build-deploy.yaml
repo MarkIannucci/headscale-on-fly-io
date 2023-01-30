@@ -33,7 +33,7 @@ jobs:
         run : |
           envsubst < fly.template.toml | tee fly.toml
           envsubst < config.template.yaml | tee config.yaml
-          envsubst < ./terraform/terraform.template.tfvars | tee terraform.tfvars
+          envsubst < ./terraform/terraform.template.tfvars | tee ./terraform/terraform.tfvars
           rm ./terraform/terraform.template.tfvars # delete this so tf fmt doesn't fail
       
       # terraform boilerplate stuff
