@@ -74,13 +74,14 @@ jobs:
       # this clunk is here because fly doesn't have a primary region concept -- https://github.com/superfly/litefs/issues/259#issuecomment-1386368570
       - id: first-apply-deploy
         run: |
-          if [ $(flyctl status --json | jq ".Status") != '"running"' ]; then
+          if [ $(flyctl status --json -a $FLY_APP_NAME | jq ".Status") != '"running"' ]; then
             TF_VAR_fly_regions="[\"$FLY_PRIMARY_REGION\"]"
             export TF_VAR_fly_regions
             terraform apply -auto-approve -input=false
             flyctl deploy
             echo "FIRST_APPLY=yes" >> $GITHUB_ENV
           fi
+        working-directory: ./terraform
 
       - id: tf-apply
         run: |
