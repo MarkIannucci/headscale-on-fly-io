@@ -1,8 +1,10 @@
 terraform {
-  backend "remote" {
+  cloud {
     organization = "markiannucci"
+
     workspaces {
       name = "headscale-on-fly-io"
     }
   }
+
 }
