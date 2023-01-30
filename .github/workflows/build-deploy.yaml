@@ -33,8 +33,7 @@ jobs:
         run : |
           envsubst < fly.template.toml | tee fly.toml
           envsubst < config.template.yaml | tee config.yaml
-          envsubst < ./terraform/terraform.template.tfvars | tee ./terraform/terraform.tfvars
-          rm ./terraform/terraform.template.tfvars # delete this so tf fmt doesn't fail
+          envsubst < ./terraform/terraform.tfvars.template | tee ./terraform/terraform.tfvars
       
       # terraform boilerplate stuff
       - id: tf-setup
@@ -100,7 +99,7 @@ jobs:
           FLY_APP_NAME=$(echo "FLY_APP_NAME" | cut -d'-' -f1-$HYPHENS) 
 
           # rerun the envsubst
-          envsubst < terraform.template.tfvars | tee terraform.tfvars
+          envsubst < terraform.tfvars.template | tee terraform.tfvars
 
           # hack around initial workspace loss
           if [ -z "$(terraform workspace list | grep default )" ]; then
