@@ -1,9 +1,9 @@
 terraform {
-  cloud {
+  remote {
     organization = "markiannucci"
 
     workspaces {
-      name = "headscale-on-fly"
+      prefix = "headscale-on-fly"
     }
   }
 }
