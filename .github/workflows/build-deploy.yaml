@@ -66,10 +66,10 @@ jobs:
       - id: tf-workspace
         if: github.event_name == 'pull_request'
         run: |
-          if [ -z "$(terraform workspace list | grep ${{ github.event.number }} )" ]; then
-            terraform workspace new ${{ github.event.number }}
+          if [ -z "$(terraform workspace list | grep $FLY_APP_NAME )" ]; then
+            terraform workspace new $FLY_APP_NAME
           else
-            terraform workspace select ${{ github.event.number }}
+            terraform workspace select $FLY_APP_NAME
           fi
 
       - id: tf-apply 
@@ -103,10 +103,10 @@ jobs:
           envsubst < terraform.tfvars.template | tee terraform.tfvars
 
           # hack around initial workspace loss
-          if [ -z "$(terraform workspace list | grep default )" ]; then
-            terraform workspace new default
+          if [ -z "$(terraform workspace list | grep $FLY_APP_NAME )" ]; then
+            terraform workspace new $FLY_APP_NAME
           else
-            terraform workspace select default
+            terraform workspace select $FLY_APP_NAME
           fi
           terraform plan -no-color -input=false
         working-directory: ./terraform
