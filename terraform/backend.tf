@@ -3,7 +3,7 @@ terraform {
     organization = "markiannucci"
 
     workspaces {
-      name = "headscale-on-fly-io"
+      name = "headscale-on-fly"
     }
   }
 
