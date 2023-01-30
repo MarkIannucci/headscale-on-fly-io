@@ -6,5 +6,4 @@ terraform {
       name = "headscale-on-fly"
     }
   }
-
 }
