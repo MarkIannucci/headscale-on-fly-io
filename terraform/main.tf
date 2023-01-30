@@ -6,7 +6,7 @@ resource "fly_volume" "persistent" {
   for_each = toset(var.fly_regions)
 
   name   = "persistent"
-  app    = var.fly_app_name
+  app    = resource.fly_app.headscale.name
   size   = 1
   region = each.key
 }
