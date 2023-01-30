@@ -61,7 +61,7 @@ jobs:
       - id: tf-validate
         run: terraform validate -no-color
         working-directory: ./terraform
-      - id: tf-workspace-apply
+      - id: tf-workspace
         run: |
           terraform workspace list
           if [ -z "$(terraform workspace list | grep $FLY_APP_NAME$ )" ]; then
@@ -71,21 +71,30 @@ jobs:
           fi
         working-directory: ./terraform
 
-      - id: tf-apply 
-        run: terraform apply -auto-approve -input=false
-        working-directory: ./terraform
-
-      # scale fly app to zero if running
-      - id: scale-zero
+      # this clunk is here because fly doesn't have a primary region concept -- https://github.com/superfly/litefs/issues/259#issuecomment-1386368570
+      - id: first-apply-deploy
         run: |
-          if [ $(flyctl status --json | jq ".Status") == '"running"' ]; then 
-            flyctl scale count 0
-            sleep 60
+          if [ $(flyctl status --json | jq ".Status") != '"running"']; then
+            TF_VAR_fly_regions="["$FLY_PRIMARY_REGION"]""
+            export TF_VAR_fly_regions
+            terraform apply -auto-approve -input=false
+            flyctl deploy
+            echo "FIRST_APPLY=yes" >> $GITHUB_ENV
           fi
 
-      # deploy to first region
+      - id: tf-apply
+        run: |
+          TF_VAR_fly_regions="["$FLY_REGIONS"]""
+          export TF_VAR_fly_regions
+          echo "TF_VAR_fly_regions=$TF_VAR_fly_regions" >> $GITHUB_ENV
+          terraform apply -auto-approve -input=false
+        working-directory: ./terraform
+
       - id: deploy
-        run: flyctl deploy --region $FLY_PRIMARY_REGION
+        run: |
+          if [ -z $FIRST_APPLY ]; then
+            flyctl deploy
+          fi
 
       # scale to other regions
       - id: scale-out
