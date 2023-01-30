@@ -64,7 +64,7 @@ jobs:
       - id: tf-workspace-apply
         run: |
           terraform workspace list
-          if [ -z "$(terraform workspace list | grep -x $FLY_APP_NAME )" ]; then
+          if [ -z "$(terraform workspace list | grep $FLY_APP_NAME -w )" ]; then
             terraform workspace new $FLY_APP_NAME
           else
             terraform workspace select $FLY_APP_NAME
@@ -102,7 +102,7 @@ jobs:
           envsubst < terraform.tfvars.template | tee terraform.tfvars
 
           # hack around initial workspace loss
-          if [ -z "$(terraform workspace list | grep -x $FLY_APP_NAME )" ]; then
+          if [ -z "$(terraform workspace list | grep $FLY_APP_NAME -w )" ]; then
             terraform workspace new $FLY_APP_NAME
           else
             terraform workspace select $FLY_APP_NAME
