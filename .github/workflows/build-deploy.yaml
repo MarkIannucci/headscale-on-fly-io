@@ -95,6 +95,10 @@ jobs:
       - id: tf-plan-production
         if: github.event_name == 'pull_request'
         run: |
-          terraform workspace select default
+          if [ -z "$(terraform workspace list | grep default )" ]; then
+            terraform workspace new default
+          else
+            terraform workspace select default
+          fi
           terraform plan -no-color -input=false
         working-directory: ./terraform
