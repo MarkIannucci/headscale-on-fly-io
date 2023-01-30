@@ -7,13 +7,3 @@ variable "fly_regions" {
   type        = list(string)
   description = "the regions to deploy to"
 }
-
-variable "terraform_cloud_organization" {
-  type        = string
-  description = "The name of the terraform cloud organization used for remote state storage"
-}
-
-variable "terraform_cloud_workspace" {
-  type        = string
-  description = "The name of the terraform workspace in terraform cloud"
-}
