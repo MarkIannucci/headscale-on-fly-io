@@ -1,0 +1,5 @@
+#!/bin/bash
+# write the private keys from fly.io secrets to files then start litefs
+echo "$HEADSCALE_PRIVATE_KEY" > /etc/headscale/private.key
+echo "$HEADSCALE_PRIVATE_NOISE_KEY" > /etc/headscale/noise_private.key
+litefs mount

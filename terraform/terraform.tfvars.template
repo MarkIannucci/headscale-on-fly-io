@@ -1,2 +1,2 @@
-fly_app_name = "$FLY_APP_NAME"
-fly_regions  = [$FLY_REGIONS]
+fly_app_name       = "$FLY_APP_NAME"
+primary_fly_region = "$FLY_PRIMARY_REGION"

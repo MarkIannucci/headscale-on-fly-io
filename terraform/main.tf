@@ -3,10 +3,8 @@ resource "fly_app" "headscale" {
 }
 
 resource "fly_volume" "persistent" {
-  for_each = toset(var.fly_regions)
-
   name   = "persistent"
   app    = resource.fly_app.headscale.name
   size   = 1
-  region = each.key
+  region = var.primary_fly_region
 }

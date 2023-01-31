@@ -7,6 +7,7 @@ processes = []
 
 [env]
   TZ = "UTC"
+  PRIMARY_REGION = "${FLY_PRIMARY_REGION}"
 
 [mounts]
   source = "persistent"
@@ -14,7 +15,7 @@ processes = []
 
 [experimental]
   auto_rollback = true
-  cmd = ["headscale","serve"]
+  cmd = ["/etc/start-litefs"]
 
 [[services]]
   http_checks = []
