@@ -73,8 +73,7 @@ jobs:
         working-directory: ./terraform
 
       - id: tf-apply
-        run: |
-          terraform apply -auto-approve -input=false
+        run: terraform apply -auto-approve -input=false
         working-directory: ./terraform
 
       # this clunk is here because fly doesn't have a primary region concept -- https://github.com/superfly/litefs/issues/259#issuecomment-1386368570
@@ -87,19 +86,15 @@ jobs:
             
             # now create the volume TODO: using that snapshot 
             flyctl volumes create persistent --region $FLY_SECONDARY_REGION --size 1 
+            flyctl scale count 2 --max-per-region 1
             echo "FIRST_APPLY=yes" >> $GITHUB_ENV
           fi
-        working-directory: ./terraform
 
-      - id: deploy
+      - id: not-first-deploy
         run: |
           if [ -z $FIRST_APPLY ]; then
             flyctl deploy
           fi
-
-      # scale to other regions
-      - id: scale-out
-        run: flyctl scale count 3 --max-per-region 1
 
       - id: tf-plan-production
         if: github.event_name == 'pull_request'
