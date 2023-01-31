@@ -10,7 +10,7 @@
 1. `fly deploy`
 
 ## How to access the `headscale` cli
-The base image that we use is hardened and doesn't have a shell available so `fly ssh console` won't work.  We can pass the commands directly though `fly ssh console -C "headscale ... "`
+The base image that we use is hardened and doesn't have a shell available so `fly ssh console` won't work.  We can pass the commands directly though `fly ssh console -C "headscale ... "`  
 
 ## CI workflow 
 launch container
