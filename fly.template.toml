@@ -15,7 +15,7 @@ processes = []
 
 [experimental]
   auto_rollback = true
-  cmd = ["start-litefs"]
+  cmd = ["/etc/start-litefs"]
 
 [[services]]
   http_checks = []
