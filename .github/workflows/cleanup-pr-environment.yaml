@@ -6,6 +6,7 @@ on:
       - closed
 
 env:
+  ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY}}
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   FLY_APP_NAME: ${{ vars.FLY_APP_NAME || secrets.FLY_APP_NAME }}
 
@@ -25,3 +26,8 @@ jobs:
       - id: destroy-app
         run:
           flyctl apps destroy ${FLY_APP_NAME} --yes
+
+      - id: tf-setup
+        uses: hashicorp/setup-terraform@v2
+      - id: cleanup-terraform-workspace
+        run: terraform workspace delete -force $FLY_APP_NAME
