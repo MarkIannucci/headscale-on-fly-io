@@ -9,8 +9,9 @@ on:
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   FLY_APP_NAME: ${{ vars.FLY_APP_NAME }}
+  FLY_BASE_APP_NAME: ${{ vars.FLY_APP_NAME }}
   FLY_PRIMARY_REGION: ${{ vars.FLY_PRIMARY_REGION }}
-  FLY_REGIONS: ${{ vars.FLY_REGIONS }}
+  FLY_SECONDARY_REGION: ${{ vars.FLY_SECONDARY_REGION }}
   ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY}}
 
 defaults:
@@ -71,25 +72,23 @@ jobs:
           fi
         working-directory: ./terraform
 
-      # this clunk is here because fly doesn't have a primary region concept -- https://github.com/superfly/litefs/issues/259#issuecomment-1386368570
-      - id: first-apply-deploy
-        run: |
-          if [ $(flyctl status --json -a $FLY_APP_NAME | jq ".Status") != '"running"' ]; then
-            TF_VAR_fly_regions="[\"$FLY_PRIMARY_REGION\"]"
-            export TF_VAR_fly_regions
-            terraform apply -auto-approve -input=false
-            cd ..
-            flyctl deploy
-            echo "FIRST_APPLY=yes" >> $GITHUB_ENV
-          fi
-        working-directory: ./terraform
-
       - id: tf-apply
         run: |
-          TF_VAR_fly_regions="[$FLY_REGIONS]"
-          export TF_VAR_fly_regions
-          echo "TF_VAR_fly_regions=$TF_VAR_fly_regions" >> $GITHUB_ENV
           terraform apply -auto-approve -input=false
+        working-directory: ./terraform
+
+      # this clunk is here because fly doesn't have a primary region concept -- https://github.com/superfly/litefs/issues/259#issuecomment-1386368570
+      - id: first-deploy
+        run: |
+          if [ $(flyctl status --json -a $FLY_APP_NAME | jq ".Status") != '"running"' ]; then
+            flyctl deploy
+            
+            # TODO: find the most recent snapshot from the primary app and use it for the secondary
+            
+            # now create the volume TODO: using that snapshot 
+            flyctl volumes create persistent --region $FLY_SECONDARY_REGION --size 1 
+            echo "FIRST_APPLY=yes" >> $GITHUB_ENV
+          fi
         working-directory: ./terraform
 
       - id: deploy
@@ -106,17 +105,10 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           # cleanup the FLY_APP_NAME we polluted earlier
-          HYPHENS=$(echo "$FLY_APP_NAME" | tr -cd '-' | wc -c)
-          FLY_APP_NAME=$(echo "$FLY_APP_NAME" | cut -d'-' -f1-$HYPHENS) 
+          FLY_APP_NAME=$FLY_APP_BASE_NAME
 
           # rerun the envsubst
           envsubst < terraform.tfvars.template | tee terraform.tfvars
-
-          # hack around initial workspace loss
-          if [ -z "$(terraform workspace list | grep $FLY_APP_NAME$ )" ]; then
-            terraform workspace new $FLY_APP_NAME
-          else
-            terraform workspace select $FLY_APP_NAME
-          fi
+          terraform workspace select $FLY_APP_NAME
           terraform plan -no-color -input=false
         working-directory: ./terraform
