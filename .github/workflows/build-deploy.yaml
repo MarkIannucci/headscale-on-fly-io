@@ -100,7 +100,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           # cleanup the FLY_APP_NAME we polluted earlier
-          FLY_APP_NAME=$FLY_APP_BASE_NAME
+          FLY_APP_NAME=$FLY_BASE_APP_NAME
 
           # rerun the envsubst
           envsubst < terraform.tfvars.template | tee terraform.tfvars
