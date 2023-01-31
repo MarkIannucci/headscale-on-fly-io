@@ -7,4 +7,6 @@ COPY litefs.yml /etc/litefs.yml
 
 EXPOSE 8080/tcp 9090/tcp
 
+ENV PATH="${PATH}:/usr/local/bin"
+
 CMD ["headscale"]
