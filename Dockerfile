@@ -1,4 +1,6 @@
-FROM ghcr.io/juanfont/headscale:0.18.0
+FROM alpine
+
+COPY --from=ghcr.io/juanfont/headscale:0.18.0 /bin/headscale /bin/headscale
 
 COPY --from=flyio/litefs:0.3 /usr/local/bin/litefs /usr/local/bin/litefs
 
