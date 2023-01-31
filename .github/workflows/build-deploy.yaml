@@ -93,7 +93,7 @@ jobs:
       - id: not-first-deploy
         run: |
           if [ -z $FIRST_APPLY ]; then
-            flyctl deploy
+            flyctl deploy --strategy immediate
           fi
 
       - id: tf-plan-production
