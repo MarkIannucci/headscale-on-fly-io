@@ -3,7 +3,7 @@ variable "fly_app_name" {
   description = "name of the fly app, will be suffixed by the PR number for PR preview environments"
 }
 
-variable "fly_regions" {
-  type        = list(string)
-  description = "the regions to deploy to"
+variable "primary_fly_region" {
+  type        = string
+  description = "the primary region we will use for our primary node"
 }
