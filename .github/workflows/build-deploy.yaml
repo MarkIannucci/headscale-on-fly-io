@@ -86,6 +86,7 @@ jobs:
       - id: first-deploy
         run: |
           if [ $(flyctl status --json -a $FLY_APP_NAME | jq ".Status") != '"running"' ]; then
+            flyctl secrets set HEADSCALE_PRIVATE_KEY=$HEADSCALE_PRIVATE_KEY HEADSCALE_PRIVATE_NOISE_KEY=$HEADSCALE_PRIVATE_NOISE_KEY
             flyctl deploy
             
             # TODO: find the most recent snapshot from the primary app and use it for the secondary
@@ -95,6 +96,9 @@ jobs:
             flyctl scale count 2 --max-per-region 1
             echo "FIRST_APPLY=yes" >> $GITHUB_ENV
           fi
+        env:
+          HEADSCALE_PRIVATE_KEY: ${{ secrets.HEADSCALE_PRIVATE_KEY }}
+          HEADSCALE_PRIVATE_NOISE_KEY: ${{ secrets.HEADSCALE_PRIVATE_NOISE_KEY }}
 
       - id: not-first-deploy
         run: |

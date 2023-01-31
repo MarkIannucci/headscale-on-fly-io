@@ -43,7 +43,7 @@ grpc_allow_insecure: false
 #
 # For production:
 # /var/lib/headscale/private.key
-private_key_path: /persistent/private.key
+private_key_path: /etc/headscale/private.key
 
 # The Noise section includes specific configuration for the
 # TS2021 Noise protocol
@@ -55,7 +55,7 @@ noise:
   #
   # For production:
   # private_key_path: /var/lib/headscale/noise_private.key
-  private_key_path: /persistent/noise_private.key
+  private_key_path: /etc/headscale/noise_private.key
 
 # List of IP prefixes to allocate tailaddresses from.
 # Each prefix consists of either an IPv4 or IPv6 address,

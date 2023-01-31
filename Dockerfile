@@ -11,6 +11,6 @@ EXPOSE 8080/tcp 9090/tcp
 
 ENV PATH="${PATH}:/usr/local/bin"
 
-RUN apk add fuse
+RUN apk add fuse bash
 
 CMD ["headscale"]

@@ -15,7 +15,7 @@ processes = []
 
 [experimental]
   auto_rollback = true
-  cmd = ["litefs","mount"]
+  cmd = ["start-litefs"]
 
 [[services]]
   http_checks = []
