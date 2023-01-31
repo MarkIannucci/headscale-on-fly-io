@@ -33,9 +33,15 @@ jobs:
 
       - id: variable-substition
         run : |
+          echo "fly.toml:"
           envsubst < fly.template.toml | tee fly.toml
+          echo "config.yaml:"
           envsubst < config.template.yaml | tee config.yaml
+          echo "terraform.tfvars"
           envsubst < ./terraform/terraform.tfvars.template | tee ./terraform/terraform.tfvars
+          echo "litefs.yml:"
+          envsubst < litefs.template.yml | tee litefs.yml
+
       
       # terraform boilerplate stuff
       - id: tf-setup
