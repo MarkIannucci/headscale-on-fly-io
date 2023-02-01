@@ -19,10 +19,12 @@
 	"remoteUser": "vscode",
 	"features": {
 		"terraform": "latest",
-		"homebrew": "latest",
 		"azure-cli": "latest",
 		"ghcr.io/devcontainers/features/github-cli:latest": {
 			"installDirectlyFromGitHubRelease": false
-		}
+		},
+		"ghcr.io/dhoeric/features/flyctl:1": {
+        	"version": "latest"
+    	}
 	}
 }
