@@ -19,8 +19,10 @@
 	"remoteUser": "vscode",
 	"features": {
 		"terraform": "latest",
-		"github-cli": "latest",
 		"homebrew": "latest",
-		"azure-cli": "latest"
+		"azure-cli": "latest",
+		"ghcr.io/devcontainers/features/github-cli:latest": {
+			"installDirectlyFromGitHubRelease": false
+		}
 	}
 }
