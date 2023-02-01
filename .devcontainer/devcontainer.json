@@ -26,5 +26,10 @@
 		"ghcr.io/dhoeric/features/flyctl:1": {
         	"version": "latest"
     	}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": ["cschleiden.vscode-github-actions", "hashicorp.terraform", "ms-azuretools.vscode-docker"]
+		}
 	}
 }
