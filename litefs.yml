@@ -63,6 +63,7 @@ lease:
   # Required. Must be either "consul" or "static".
   type: "static"
   candidate: ${FLY_REGION == PRIMARY_REGION}
+  hostname: ${FLY_REGION}.${FLY_APP_NAME}.internal
 
   # Required. The URL for this node's LiteFS API.
   # Should match HTTP port.
