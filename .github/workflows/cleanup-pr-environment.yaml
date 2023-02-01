@@ -31,3 +31,4 @@ jobs:
         uses: hashicorp/setup-terraform@v2
       - id: cleanup-terraform-workspace
         run: terraform workspace delete -force $FLY_APP_NAME
+        working-directory: ./terraform
