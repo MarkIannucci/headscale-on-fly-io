@@ -1,3 +1,9 @@
+variable "fly_org" {
+  type        = string
+  description = "organization to deploy into"
+  default     = "personal"
+}
+
 variable "fly_app_name" {
   type        = string
   description = "name of the fly app, will be suffixed by the PR number for PR preview environments"
