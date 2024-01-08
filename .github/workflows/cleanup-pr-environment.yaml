@@ -15,7 +15,7 @@ jobs:
     name: Deploy app
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: markiannucci/flyctl-actions/setup-flyctl@main
 
       - id: update-app-name-for-prs
