@@ -42,7 +42,7 @@ jobs:
     
       # terraform boilerplate stuff
       - id: tf-setup
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
       - id: tf-fmt
         run: terraform fmt -check
         working-directory: ./terraform
