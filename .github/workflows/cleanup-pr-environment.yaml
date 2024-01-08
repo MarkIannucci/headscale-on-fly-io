@@ -28,7 +28,7 @@ jobs:
           flyctl apps destroy ${FLY_APP_NAME} --yes
 
       - id: tf-setup
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
       - id: cleanup-terraform-workspace
         run: |
           terraform init
